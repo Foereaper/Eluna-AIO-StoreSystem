@@ -81,13 +81,13 @@ CREATE TABLE IF NOT EXISTS `store_logs` (
   `account` int DEFAULT NULL,
   `guid` int DEFAULT NULL,
   `serviceId` int DEFAULT NULL,
-  `currencyType` int DEFAULT NULL,
+  `currencyId` int DEFAULT NULL,
   `cost` int DEFAULT NULL,
   `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table store.store_logs: ~29 rows (approximately)
-INSERT INTO `store_logs` (`account`, `guid`, `serviceId`, `currencyType`, `cost`, `time`) VALUES
+INSERT INTO `store_logs` (`account`, `guid`, `serviceId`, `currencyId`, `cost`, `time`) VALUES
 	(1, 1, 12, 1, 10, '2023-04-07 03:03:06'),
 	(1, 1, 12, 1, 5, '2023-04-07 03:04:23'),
 	(1, 1, 13, 1, 10, '2023-04-07 03:20:42'),

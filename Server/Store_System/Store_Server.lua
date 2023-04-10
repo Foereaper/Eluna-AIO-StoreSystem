@@ -143,7 +143,8 @@ function SHOP_UI.DeductCurrency(player, currencyId, amount)
 end
 
 function SHOP_UI.LogPurchase(player, data)
-	WorldDBExecute("INSERT INTO store.store_logs(account, guid, serviceId, currencyType, cost) VALUES("..player:GetAccountId()..", "..player:GetGUIDLow()..", "..data.ID..", "..data[8]..", "..data[7] - data[11]..");")
+	local currency, amount = data[KEYS.service.currency], data[KEYS.service.price] - data[KEYS.service.discount]
+	WorldDBExecute("INSERT INTO store.store_logs(account, guid, serviceId, currencyId, cost) VALUES("..player:GetAccountId()..", "..player:GetGUIDLow()..", "..data.ID..", "..currency..", "..amount..");")
 end
 
 -- ITEMS
