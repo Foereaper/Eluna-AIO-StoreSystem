@@ -13,7 +13,7 @@ local CONFIG = {
 
 local AIO = AIO or require("AIO")
 if AIO.AddAddon() then
-    return
+	return
 end
 
 local KEYS = {
@@ -73,13 +73,13 @@ local scaleMulti = 0.85
 -- Helpers --
 
 local function CoordsToTexCoords(size, xTop, yTop, xBottom, yBottom)
-    local magic = (1/size)/2
-    local Top = (yTop/size) + magic
-    local Left = (xTop/size) + magic
-    local Bottom = (yBottom/size) - magic
-    local Right = (xBottom/size) - magic
+	local magic = (1/size)/2
+	local Top = (yTop/size) + magic
+	local Left = (xTop/size) + magic
+	local Bottom = (yBottom/size) - magic
+	local Right = (xBottom/size) - magic
 
-    return Left, Right, Top, Bottom
+	return Left, Right, Top, Bottom
 end
 
 ------------
@@ -135,7 +135,7 @@ function SHOP_UI.MainFrame_Create()
 	-- Background texture
 	shopFrame.Background = shopFrame:CreateTexture(nil, "BACKGROUND")
 	shopFrame.Background:SetSize(shopFrame:GetSize())
-    shopFrame.Background:SetPoint("CENTER", shopFrame, "CENTER")
+	shopFrame.Background:SetPoint("CENTER", shopFrame, "CENTER")
 	shopFrame.Background:SetTexture("Interface/Store_UI/Frames/StoreFrame_Main")
 	shopFrame.Background:SetTexCoord(CoordsToTexCoords(1024, 0, 0, 1024, 658))
 	
@@ -225,8 +225,8 @@ function SHOP_UI.NavButtons_Create(parent)
 		navButton:SetPoint("LEFT", parent, "LEFT", 14, 195+offset)
 		
 		navButton:SetNormalTexture("Interface/Store_UI/Frames/StoreFrame_Main")
-        navButton:SetHighlightTexture("Interface/Store_UI/Frames/StoreFrame_Main")
-        navButton:GetNormalTexture():SetTexCoord(CoordsToTexCoords(1024, 768, 897, 1023, 960))
+		navButton:SetHighlightTexture("Interface/Store_UI/Frames/StoreFrame_Main")
+		navButton:GetNormalTexture():SetTexCoord(CoordsToTexCoords(1024, 768, 897, 1023, 960))
 		navButton:GetHighlightTexture():SetTexCoord(CoordsToTexCoords(1024, 768, 960, 1023, 1023))
 		
 		-- Category name
@@ -237,8 +237,8 @@ function SHOP_UI.NavButtons_Create(parent)
 		
 		-- Icon
 		navButton.Icon = navButton:CreateTexture(nil, "BACKGROUND")
-        navButton.Icon:SetSize(31, 31)
-        navButton.Icon:SetPoint("LEFT", navButton, "LEFT", 6, -1)
+		navButton.Icon:SetSize(31, 31)
+		navButton.Icon:SetPoint("LEFT", navButton, "LEFT", 6, -1)
 		
 		-- increment Y coordinate offset
 		offset = offset - 40
@@ -372,29 +372,29 @@ function SHOP_UI.ServiceBoxes_Create(parent)
 		end
 		BoxCoordX = x_offsets[(i - 1) % 4 + 1]
 		
-        service:SetSize(150, 230)
-        service:SetPoint("CENTER", parent, "CENTER", BoxCoordX, BoxCoordY)
-        service:SetNormalTexture("Interface/Store_UI/Frames/StoreFrame_Main")
-        service:SetHighlightTexture("Interface/Store_UI/Frames/StoreFrame_Main")
-        service:GetNormalTexture():SetTexCoord(CoordsToTexCoords(1024, 0, 658, 215, 1023))
+		service:SetSize(150, 230)
+		service:SetPoint("CENTER", parent, "CENTER", BoxCoordX, BoxCoordY)
+		service:SetNormalTexture("Interface/Store_UI/Frames/StoreFrame_Main")
+		service:SetHighlightTexture("Interface/Store_UI/Frames/StoreFrame_Main")
+		service:GetNormalTexture():SetTexCoord(CoordsToTexCoords(1024, 0, 658, 215, 1023))
 		service:GetHighlightTexture():SetTexCoord(CoordsToTexCoords(1024, 215, 658, 430, 1023))
 		
 		-- icon
 		service.Icon = service:CreateTexture(nil, "BACKGROUND")
-        service.Icon:SetSize(40, 40)
-        service.Icon:SetPoint("CENTER", service, "CENTER", 0, 64)
+		service.Icon:SetSize(40, 40)
+		service.Icon:SetPoint("CENTER", service, "CENTER", 0, 64)
 		
 		-- service name
 		service.NameFont = service:CreateFontString()
-        service.NameFont:SetFont("Fonts\\FRIZQT__.TTF", 11)
-        service.NameFont:SetShadowOffset(1, -1)
-        service.NameFont:SetPoint("CENTER", service, "CENTER", 0, 16)
+		service.NameFont:SetFont("Fonts\\FRIZQT__.TTF", 11)
+		service.NameFont:SetShadowOffset(1, -1)
+		service.NameFont:SetPoint("CENTER", service, "CENTER", 0, 16)
 		
 		-- service price
-        service.PriceFont = service:CreateFontString()
-        service.PriceFont:SetFont("Fonts\\FRIZQT__.TTF", 13)
-        service.PriceFont:SetShadowOffset(1, -1)
-        service.PriceFont:SetPoint("CENTER", service, "CENTER", 7, -30)
+		service.PriceFont = service:CreateFontString()
+		service.PriceFont:SetFont("Fonts\\FRIZQT__.TTF", 13)
+		service.PriceFont:SetShadowOffset(1, -1)
+		service.PriceFont:SetPoint("CENTER", service, "CENTER", 7, -30)
 
 		--Discount--
 		service.DicountFont = service:CreateFontString()
@@ -454,7 +454,7 @@ function SHOP_UI.ServiceBoxes_Create(parent)
 		service.buyButton:SetScript(
 			"OnClick",
 			function(self)
-				local dialog = StaticPopup_Show("CONFIRM_STORE_PURCHASE", self:GetParent().Name)     -- dialog contains the frame object
+				local dialog = StaticPopup_Show("CONFIRM_STORE_PURCHASE", self:GetParent().Name)	 -- dialog contains the frame object
 				if (dialog) then
 					dialog.data = self:GetParent().ServiceId
 				end
@@ -466,8 +466,8 @@ function SHOP_UI.ServiceBoxes_Create(parent)
 		-- Tooltip script
 		-- this requires a few predefined variables tied to the tab object, we override these in the update function
 		service:SetScript(
-            "OnEnter",
-            function(self)
+			"OnEnter",
+			function(self)
 				if(self.TooltipName or self.TooltipText or self.TooltipType) then
 					GameTooltip:SetOwner(self, "ANCHOR_NONE")
 					GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0)
@@ -482,15 +482,15 @@ function SHOP_UI.ServiceBoxes_Create(parent)
 					end
 					GameTooltip:Show()
 				end
-            end
-        )
+			end
+		)
 
-        service:SetScript(
-            "OnLeave",
-            function(self)
-                GameTooltip:Hide()
-            end
-        )
+		service:SetScript(
+			"OnLeave",
+			function(self)
+				GameTooltip:Hide()
+			end
+		)
 		
 		service:SetScript(
 			"OnClick",
@@ -585,7 +585,7 @@ function SHOP_UI.ServiceBoxes_Update()
 	
 	-- Get the service per page index
 	local startIndex = (currentPage - 1) * 8 + 1
-    local endIndex = startIndex + 8 - 1
+	local endIndex = startIndex + 8 - 1
 	local maxPages = math.ceil(#services / 8)
 	if(maxPages < 1) then
 		maxPages = 1
@@ -698,9 +698,9 @@ function SHOP_UI.PageButtons_Create(parent)
 	)
 	
 	local pageText = parent:CreateFontString()
-    pageText:SetFont("Fonts\\FRIZQT__.TTF", 13)
-    pageText:SetShadowOffset(1, -1)
-    pageText:SetPoint("LEFT", backButton, "RIGHT", 20, 0)
+	pageText:SetFont("Fonts\\FRIZQT__.TTF", 13)
+	pageText:SetShadowOffset(1, -1)
+	pageText:SetPoint("LEFT", backButton, "RIGHT", 20, 0)
 	
 	local forwardButton = CreateFrame("Button", nil, parent)
 	forwardButton:SetSize(25, 25)
@@ -789,23 +789,23 @@ function SHOP_UI.CurrencyBadges_Create(parent)
 		currencyButton:Hide()
 
 		currencyButton:SetScript(
-            "OnEnter",
-            function(self)
+			"OnEnter",
+			function(self)
 				GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 18, 0)
 				GameTooltip:AddLine("|cffffffff" .. self.currencyName .. "|r")
 				if(self.currencyTooltip) then
 					GameTooltip:AddLine(self.currencyTooltip)
 				end
 				GameTooltip:Show()
-            end
-        )
+			end
+		)
 
-        currencyButton:SetScript(
-            "OnLeave",
-            function(self)
-                GameTooltip:Hide()
-            end
-        )
+		currencyButton:SetScript(
+			"OnLeave",
+			function(self)
+				GameTooltip:Hide()
+			end
+		)
 		
 		SHOP_UI["CURRENCY_BUTTONS"][i] = currencyButton
 	end
@@ -852,7 +852,7 @@ function SHOP_UI.ModelFrame_Create(parent)
 	-- Background texture
 	modelFrame.Background = modelFrame:CreateTexture(nil, "BACKGROUND")
 	modelFrame.Background:SetSize(modelFrame:GetSize())
-    modelFrame.Background:SetPoint("CENTER", modelFrame, "CENTER")
+	modelFrame.Background:SetPoint("CENTER", modelFrame, "CENTER")
 	modelFrame.Background:SetTexture("Interface/Store_UI/Frames/StoreFrame_Main")
 	modelFrame.Background:SetTexCoord(CoordsToTexCoords(1024, 430, 658, 701, 1023))
 	
@@ -1131,11 +1131,11 @@ function SHOP_UI.ModelFrame_ShowCreature(displayId)
 end
 
 function MainFrame_Toggle()
-    if SHOP_UI["FRAME"]:IsShown() and SHOP_UI["FRAME"]:IsVisible() then
-        SHOP_UI["FRAME"]:Hide()
-    else
-        SHOP_UI["FRAME"]:Show()
-    end
+	if SHOP_UI["FRAME"]:IsShown() and SHOP_UI["FRAME"]:IsVisible() then
+		SHOP_UI["FRAME"]:Hide()
+	else
+		SHOP_UI["FRAME"]:Show()
+	end
 end
 
 local function ModifyGameMenuFrame()

@@ -28,8 +28,8 @@ local CURRENCY_TYPES = {
 }
 
 local SHOP_UI = {
-    serviceHandlers = {
-        [1] = "ItemHandler", 		-- Okay
+	serviceHandlers = {
+		[1] = "ItemHandler", 		-- Okay
 		[2] = "GoldHandler", 		-- Okay
 		[3] = "MountHandler",		-- Okay
 		[4] = "PetHandler",  		-- Okay
@@ -38,7 +38,7 @@ local SHOP_UI = {
 		[7] = "ServiceHandler", 	-- Okay
 		[8] = "LevelHandler", 		-- Okay
 		[9] = "TitleHandler",		-- Okay
-    }
+	}
 }
 
 local KEYS = GetDataStructKeys();
@@ -62,6 +62,10 @@ function StoreHandler.UpdateCurrencies(player)
 		
 		if(currencyTypeText == "ITEM_TOKEN") then
 			val = player:GetItemCount(currency[KEYS.currency.data])
+		end
+		
+		if(currencyTypeText == "SERVER_HANDLED") then
+			-- Add your custom handling here for retreiving your server handled currencies
 		end
 		
 		-- If value is larger than 10k then truncate to make sure it fits within the shop frame
@@ -128,6 +132,11 @@ function SHOP_UI.DeductCurrency(player, currencyId, amount)
 		end
 		
 		player:RemoveItem(currencyData, amount) 
+	end
+	
+	-- Other special handlingm you have to add your own integration here.
+	if(CURRENCY_TYPES[currencyType] == "SERVER_HANDLED") then
+		return false
 	end
 	
 	return true

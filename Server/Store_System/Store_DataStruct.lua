@@ -89,11 +89,11 @@ function CurrencyData.Load()
 end
 
 function ServiceData.Load()
-    ServiceData.Cache = {};
-    
-    local Query = WorldDBQuery("SELECT * FROM store.store_services;");
-    if(Query) then
-        repeat
+	ServiceData.Cache = {};
+	
+	local Query = WorldDBQuery("SELECT * FROM store.store_services;");
+	if(Query) then
+		repeat
 			if(Query:GetUInt32(KEYS.service.enabled) == 1) then
 				ServiceData.Cache[Query:GetUInt32(KEYS.service.id)] = {
 					Query:GetUInt32(KEYS.service.serviceType),
@@ -127,8 +127,8 @@ function ServiceData.Load()
 					Query:GetUInt32(KEYS.service.new),
 				}
 			end
-        until not Query:NextRow()
-    end
+		until not Query:NextRow()
+	end
 end
 
 function CreatureDisplays.Load()
@@ -142,7 +142,7 @@ function CreatureDisplays.Load()
 	
 	local Query = WorldDBQuery("SELECT entry, `name`, subname, IconName, type_flags, `type`, family, `rank`, KillCredit1, KillCredit2, modelId1, modelId2, modelId3, modelId4, HealthModifier, ManaModifier, RacialLeader, MovementType FROM creature_template WHERE entry IN ("..unpack(tmp)..");")
 	if(Query) then
-        repeat
+		repeat
 		table.insert(CreatureDisplays.Cache, 
 		{
 			Query:GetUInt32(0),
@@ -169,18 +169,18 @@ function CreatureDisplays.Load()
 end
 
 function LinkData.Load()
-    LinkData.Cache = {};
-    
-    local Query = WorldDBQuery("SELECT * FROM store.store_category_service_link;");
-    if(Query) then
-        repeat
+	LinkData.Cache = {};
+	
+	local Query = WorldDBQuery("SELECT * FROM store.store_category_service_link;");
+	if(Query) then
+		repeat
 			table.insert(LinkData.Cache, {Query:GetUInt32(0), Query:GetUInt32(1)})
 		until not Query:NextRow()
 	end
 end
 
 function GetServiceData()
-    return ServiceData.Cache;
+	return ServiceData.Cache;
 end
 
 function GetLinkData()
