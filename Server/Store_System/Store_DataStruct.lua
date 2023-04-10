@@ -133,14 +133,23 @@ end
 
 function CreatureDisplays.Load()
 	CreatureDisplays.Cache = {}
-	local tmp = {}
+	local tmp = ""
+	-- fetch all entries for creature cache that needs to be sent to the client for preview
+	-- store these as a comma separated string to be used in the sql query below
 	for k, v in pairs(ServiceData.Cache) do
 		if ((v[KEYS.service.serviceType] == 3 or v[KEYS.service.serviceType] == 4) and v[KEYS.service.displayOrEntry] > 0) then
-			table.insert(tmp, v[KEYS.service.displayOrEntry])
+			-- first entry shouldn't append a comma
+			if(tmp ~= "") then
+				tmp = tmp .. ", "
+			end
+			
+			-- append creature entry to the query string
+			tmp = tmp .. v[KEYS.service.displayOrEntry]
 		end
 	end
 	
-	local Query = WorldDBQuery("SELECT entry, `name`, subname, IconName, type_flags, `type`, family, `rank`, KillCredit1, KillCredit2, modelId1, modelId2, modelId3, modelId4, HealthModifier, ManaModifier, RacialLeader, MovementType FROM creature_template WHERE entry IN ("..unpack(tmp)..");")
+	-- get all info and store it in the CreatureDisplays cache
+	local Query = WorldDBQuery("SELECT entry, `name`, subname, IconName, type_flags, `type`, family, `rank`, KillCredit1, KillCredit2, modelId1, modelId2, modelId3, modelId4, HealthModifier, ManaModifier, RacialLeader, MovementType FROM creature_template WHERE entry IN ("..tmp..");")
 	if(Query) then
 		repeat
 		table.insert(CreatureDisplays.Cache, 
@@ -341,11 +350,11 @@ end
 local function SendCreatureQueryResponse(player, data)
 	local packet = CreatePacket(97, 100)
 	packet:WriteULong(data[1])
-	packet:WriteString(data[2])
+	packet:WriteString(data[2] or "")
 	packet:WriteUByte(0)
 	packet:WriteUByte(0)
 	packet:WriteUByte(0)
-	packet:WriteString(data[3])
+	packet:WriteString(data[3] or "")
 	packet:WriteString(data[4] or "")
 	packet:WriteULong(data[5])
 	packet:WriteULong(data[6])
