@@ -394,8 +394,13 @@ function SHOP_UI.ServiceBoxes_Create(parent)
 		service.PriceFont = service:CreateFontString()
 		service.PriceFont:SetFont("Fonts\\FRIZQT__.TTF", 13)
 		service.PriceFont:SetShadowOffset(1, -1)
-		service.PriceFont:SetPoint("CENTER", service, "CENTER", 7, -30)
-
+		service.PriceFont:SetPoint("CENTER", service, "CENTER", -3, -30)
+		
+		-- price currency icon
+		service.currencyIcon = service:CreateTexture(nil, "OVERLAY")
+		service.currencyIcon:SetSize(18, 18)
+		service.currencyIcon:SetPoint("LEFT", service.PriceFont, "RIGHT", 0, 0)
+		
 		--Discount--
 		service.DicountFont = service:CreateFontString()
 		service.DicountFont:SetFont("Fonts\\FRIZQT__.TTF", 10)
@@ -623,9 +628,10 @@ function SHOP_UI.ServiceBoxes_Update()
 			local currencyIcon = currencyData[service.Currency][KEYS.currency.icon]
 			
 			-- update tab data
-			service.Icon:SetTexture("Interface/Icons/" .. service.IconTexture .. ".blp")
+			service.Icon:SetTexture("Interface/Icons/" .. service.IconTexture)
 			service.NameFont:SetFormattedText("|cffffffff%s|r", service.Name)
 			service.DicountFont:SetFormattedText("|cffdbe005%i|r", service.Price)
+			service.currencyIcon:SetTexture("Interface/Store_UI/Currencies/" .. currencyIcon)
 			
 			-- calculate discount percentage
 			local discountPct = math.floor(((service.Price - service.Discount) - service.Price) / service.Price * 100)
@@ -633,13 +639,13 @@ function SHOP_UI.ServiceBoxes_Update()
 			
 			-- if service is discounted, then show all the discount frames and override the price text. otherwise hide.
 			if service.Discount > 1 then
-				service.PriceFont:SetFormattedText("|cff1eff00%i|r |TInterface/Store_UI/Currencies/%s:18:18:0:0|t", (service.Price - service.Discount), currencyIcon)
+				service.PriceFont:SetFormattedText("|cff1eff00%i|r", (service.Price - service.Discount))
 				service.DicountFont:Show()
 				service.DiscountSlash:Show()
 				service.Banner:Show()
 				service.BannerText:Show()
 			else
-				service.PriceFont:SetFormattedText("|cffdbe005%i|r |TInterface/Store_UI/Currencies/%s:18:18:0:0|t", service.Price, currencyIcon)
+				service.PriceFont:SetFormattedText("|cffdbe005%i|r", service.Price)
 				service.DicountFont:Hide()
 				service.DiscountSlash:Hide()
 				service.Banner:Hide()
@@ -687,8 +693,6 @@ function SHOP_UI.PageButtons_Create(parent)
 	backButton:GetDisabledTexture():SetTexCoord(CoordsToTexCoords(1024, backTopX, backTopY, backBotX, backBotY))
 	backButton:GetNormalTexture():SetTexCoord(CoordsToTexCoords(1024, backTopX+31, backTopY, backBotX+31, backBotY))
 	backButton:GetPushedTexture():SetTexCoord(CoordsToTexCoords(1024, backTopX+62, backTopY, backBotX+62, backBotY))
-	
-	
 	
 	backButton:SetScript(
 		"OnClick",
@@ -776,18 +780,27 @@ end
 
 function SHOP_UI.CurrencyBadges_Create(parent)
 	SHOP_UI["CURRENCY_BUTTONS"] = {}
+	
+	-- Create a frame for the currency buttons to exist on
+	local currencyBackdrop = CreateFrame("Frame", nil, parent)
+	currencyBackdrop:SetSize(180, 20)
+	currencyBackdrop:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", 10, 30)
+	
 	for i = 1, 4 do
 		-- Button frame
-		local currencyButton = CreateFrame("Button", nil, parent)
-		currencyButton:SetSize(20, 20)
-		currencyButton:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", 35 + ((i-1)*48), 30)
+		local currencyButton = CreateFrame("Button", nil, currencyBackdrop)
+		currencyButton:SetSize(15, 15)
 		
 		-- Amount text
 		currencyButton.Amount = currencyButton:CreateFontString()
 		currencyButton.Amount:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-		currencyButton.Amount:SetPoint("RIGHT", currencyButton, 0, 0)
-		currencyButton:Hide()
-
+		currencyButton.Amount:SetPoint("CENTER", currencyButton, "CENTER", 0, 0)
+		
+		-- amount icon
+		currencyButton.Icon = currencyButton:CreateTexture(nil, "OVERLAY")
+		currencyButton.Icon:SetSize(15, 15)
+		currencyButton.Icon:SetPoint("LEFT", currencyButton.Amount, "RIGHT")
+		
 		currencyButton:SetScript(
 			"OnEnter",
 			function(self)
@@ -807,12 +820,17 @@ function SHOP_UI.CurrencyBadges_Create(parent)
 			end
 		)
 		
+		-- hide the button by default
+		currencyButton:Hide()
+		
+		-- push button to table for later use
 		SHOP_UI["CURRENCY_BUTTONS"][i] = currencyButton
 	end
 end
 
 function SHOP_UI.CurrencyBadges_OnData()
 	local index = 1
+	local shownCount = 0
 	for k, v in pairs(SHOP_UI["Data"].currencies) do
 		if index > 4 then
 			break;
@@ -829,8 +847,29 @@ function SHOP_UI.CurrencyBadges_OnData()
 		-- Show the button
 		button:Show()
 		
+		-- Keep track of indexes and whether or not a button is shown
+		shownCount = shownCount + 1
 		index = index + 1
 	end
+	
+	-- we now want to update the currency buttons position to dynamically scale based on configured currencies
+	for i = 1, shownCount do
+		local button = SHOP_UI["CURRENCY_BUTTONS"][i]
+		-- calculate the amount of additional padding to add to the total width of the frame
+		local padding = 10*(shownCount-1)
+		-- calculate spacing based on number of visible buttons and parent width, and add the additional padding
+		local spacing = (150+padding) / shownCount
+		-- calculate total width
+		local total_width = (shownCount - 1) * spacing
+		-- offset to center the button along x-axis
+		local offset_x = -total_width / 2
+		-- calculate the x coordinate of the button
+		local x = offset_x + (i - 1) * spacing 
+		
+		-- and finally set the button position with the calculated x value
+		button:SetPoint("CENTER", button:GetParent(), "CENTER", x, 0)
+	end
+	
 	SHOP_UI.CurrencyBadges_Update()
 end
 
@@ -838,7 +877,8 @@ function SHOP_UI.CurrencyBadges_Update()
 	for _, button in pairs(SHOP_UI["CURRENCY_BUTTONS"]) do
 		if(button.shown) then
 			button.currencyValue = SHOP_UI["Vars"]["playerCurrencies"][button.currencyId] or 0
-			button.Amount:SetFormattedText("%i|TInterface/Store_UI/Currencies/%s:18:18:0:0|t", button.currencyValue, button.currencyIcon)
+			button.Amount:SetFormattedText("%i", button.currencyValue)
+			button.Icon:SetTexture("Interface/Store_UI/Currencies/"..button.currencyIcon)
 		end
 	end
 end
@@ -1100,13 +1140,11 @@ function SHOP_UI.ModelFrame_ShowPlayer(displayId)
 	SHOP_UI["MODEL_FRAME"]:Show()
 	
 	if(displayId) then
-		if(type(displayId) == "table") then
-			for _, id in pairs(displayId) do
-				if(id > 0) then
-					SHOP_UI["MODEL_FRAME"].playerModel:TryOn(id)
-				end
-			end
-		end
+        for _, id in pairs(displayId) do
+            if(id > 0) then
+                SHOP_UI["MODEL_FRAME"].playerModel:TryOn(id)
+            end
+        end
 	end
 
 	PlaySound("INTERFACESOUND_GAMESCROLLBUTTON", "Master")
