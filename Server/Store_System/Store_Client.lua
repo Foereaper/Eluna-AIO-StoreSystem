@@ -876,8 +876,8 @@ end
 function SHOP_UI.CurrencyBadges_Update()
 	for _, button in pairs(SHOP_UI["CURRENCY_BUTTONS"]) do
 		if(button.shown) then
-			button.currencyValue = SHOP_UI["Vars"]["playerCurrencies"][button.currencyId] or 0
-			button.Amount:SetFormattedText("%i", button.currencyValue)
+			button.currencyValue = SHOP_UI["Vars"]["playerCurrencies"][button.currencyId]
+			button.Amount:SetText(button.currencyValue)
 			button.Icon:SetTexture("Interface/Store_UI/Currencies/"..button.currencyIcon)
 		end
 	end
