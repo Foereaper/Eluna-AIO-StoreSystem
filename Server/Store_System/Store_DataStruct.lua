@@ -4,6 +4,13 @@ local NavData = {}
 local CurrencyData = {}
 local CreatureDisplays = {}
 
+-- compatibility unpack function for Lua versions without unpack
+if not _G["unpack"] then
+      function unpack(t)
+            return table.unpack(t)
+      end
+end
+
 local KEYS = {
 	currency = {
 		id				= 0,
